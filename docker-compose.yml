@@ -1,0 +1,88 @@
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: lib
+      POSTGRES_PASSWORD: lib
+      POSTGRES_DB: lib
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - main
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - 5050:80
+    networks:
+      - main
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    ports:
+      - "6379:6379"
+    networks:
+      - main
+
+  web:
+    build: .
+    container_name: app
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/app
+    depends_on:
+      - postgres
+      - redis
+    restart: always
+    environment:
+      - API_REDIS_HOST=redis
+
+    networks:
+      - main
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus_data/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+
+
+
+
+networks:
+  main:
+
+volumes:
+  redis_data:
+
+  prometheus_data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./prometheus_data
+  grafana_data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./grafana_data
+  postgres_data:
