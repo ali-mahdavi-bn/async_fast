@@ -7,7 +7,7 @@ from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from account.adapters import repositories as account_repo
-from account.adapters.data_models import User
+from account.adapters.data_models import UserEntity
 from backbone.infrastructure.databases.postgres_connection import get_db
 
 
@@ -60,37 +60,10 @@ class UnitOfWork(object):
         await self.session.close()
 
     async def get(self, id):
-        result = sa.select(User).where(User.is_active == True)
+        result = sa.select(UserEntity).where(UserEntity.is_active == True)
         a = await self.session.scalar(result)
-        print("aaaaaaaaaaaaaaaaa ali ali ali")
-        print(a)
-        print(a.first_name)
-
-    # async def create(self, username=None, password=None):
-    #     user = User(username=username, password=password)
-    #     # first_name = first_name, last_name = last_name, username = username, mobile = mobile, email = email,
-    #     # type = type, is_active = is_active
-    #     # print(first_name)
-    #     self.session.add(user)
-    #     await self.session.commit()
 
     async def rollback(self):
         self.session.expunge_all()
 
 
-class uow:
-
-    async def __aenter__(self):
-        session = await get_db()
-        async with session as conn:
-            self.session = conn
-            return self
-
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        pass
-
-    async def get(self, id):
-        result = sa.select(User).where(User.is_active == True)
-        a = await self.session.scalar(result)
-        print(a)
-        print(a.first_name)

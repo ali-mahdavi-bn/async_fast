@@ -19,6 +19,7 @@ class Brand(Base):
     short_description = Column(String(255), nullable=True)
     slug = Column(String(255))
     is_active = Column(Boolean, default=False)
+
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, onupdate=func.now(), default=func.now())
     deleted_at = Column(DateTime)

@@ -89,6 +89,14 @@ class RedisConnection:
         await cls.get_connection()
         return await cls._connection.get(key)
 
+    async def exists(cls, key):
+        await cls.get_connection()
+        return True if await cls._connection.exists(key) == 1 else False
+
+    async def ttl(cls, key):
+        await cls.get_connection()
+        return await cls._connection.ttl(key)
+
     async def set_and_get(cls, key, value):
         await cls.set_value(key=key, value=value)
         await cls.get_value(key=key)

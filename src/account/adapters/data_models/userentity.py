@@ -47,7 +47,7 @@ from backbone.infrastructure.databases.postgres_connection import Base
 #     # Define the relationship to the Enumeration table
 
 
-class User(Base,BaseEntity):
+class UserEntity(Base, BaseEntity):
     __tablename__ = 'users'
     __table_args__ = {'schema': 'account'}
 
@@ -57,9 +57,25 @@ class User(Base,BaseEntity):
     last_name = Column(String(100), nullable=True)
     username = Column(String(100), nullable=False)
     mobile = Column(String(20), nullable=False)
+    password = Column(String(225), nullable=False)
     email = Column(String(100), nullable=True)
     type = Column(Integer, ForeignKey('enumeration.id'), nullable=False)
     is_active = Column(Boolean, default=False)
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
     deleted_at = Column(DateTime, nullable=True)
+
+    @classmethod
+    def create(self, first_name=None, last_name=None, username=None, password=None, mobile=None, email=None, type=1,
+               is_active=None):
+        user = UserEntity()
+        user.first_name = first_name
+        user.last_name = last_name
+        user.username = username
+        user.mobile = str(mobile)
+        user.password = password
+        user.email = email
+        user.type = type
+        user.is_active = is_active
+
+        return user

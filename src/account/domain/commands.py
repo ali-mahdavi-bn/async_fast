@@ -1,13 +1,18 @@
+from typing import Optional
+
 from backbone.service_layer.general_types import Command
 
 
 class RegisterCommand(Command):
-    first_name: str
-    last_name: str
+    first_name: Optional[str]
+    last_name: Optional[str]
     username: str
-    mobile: str
+    mobile: int
     email: str
-    type: int
-    is_active: bool
-    # username: str
-    # password: str
+    password: str
+
+
+class LoginCommand(Command):
+    mobile: str
+    otp_code: str
+    step: int

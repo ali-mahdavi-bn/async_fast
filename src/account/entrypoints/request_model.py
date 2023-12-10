@@ -1,13 +1,17 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
 class RegisterRequestModel(BaseModel):
-    first_name: str
-    last_name: str
+    first_name: Optional[str]
+    last_name: Optional[str]
     username: str
-    mobile: str
+    mobile: int
     email: str
-    type: int
-    is_active: bool
-    # username: str
-    # password: str
+    password: str
+
+
+class LoginRequestModel(BaseModel):
+    mobile: str
+    otp_code: str

@@ -1,5 +1,7 @@
 from typing import Any, Dict, List
 
+from starlette.responses import JSONResponse
+
 from backbone.adapter.abstract_entity import BaseEntity
 from backbone.apis.abstract_api_resource import AbstractApiResource
 
@@ -22,3 +24,10 @@ class BaseCommandResource(AbstractApiResource):
             message=message,
             data={"data": data},
         )
+
+
+def default_message(*, message, data = {}, status=200):
+    return JSONResponse(content={
+        "message": message,
+        "data": data
+    }, status_code=status)

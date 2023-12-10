@@ -1,7 +1,8 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from starlette.middleware.cors import CORSMiddleware
+from starlette.requests import Request
 
 # routes
 from account.entrypoints.router import router as account_router
@@ -31,7 +32,12 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+
 app.add_middleware(AuthenticateMiddleware)
+
+
+
 
 origins = [
     "http://localhost",
